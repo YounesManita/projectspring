@@ -1,0 +1,65 @@
+application:
+  name: speakly
+
+server:
+  port: 8089
+logging:
+  level:
+    org:
+      springframework=DEBUG:
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/speakly?createDatabaseIfNotExist=true
+    username: "root"
+    password: ""
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    database-platform: MySQL8Dialect
+
+  mail:
+    protocol: smtp
+    port: 587
+    host: smtp.gmail.com
+    username: "nidhalnaffati@gmail.com"
+    password: "twqe qlwp qsnt muqo "
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  output:
+    ansi:
+      enabled: always
+
+# The admin username and password are used to create the admin account when the application starts.
+admin:
+  username: "admin@mail.com"
+  password: "admin123"
+
+user:
+  username: "user@mail.com"
+  password: "user123"
+
+jwt:
+  expiration:
+    access-token: 86400000          # 1 hour
+    refresh-token: 604800000       # 7 days
+    reset-password: 900000         # 15 minutes
+    enable-account: 900000
+
+  # The jwt secret key is used to sign the token.
+  secret-key: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
+
+verification-code:
+  expiration:
+    account-activation: 20         # 20 minutes
+    reset-password: 10            # 10 minutes

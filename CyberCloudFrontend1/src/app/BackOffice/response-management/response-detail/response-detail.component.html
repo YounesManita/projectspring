@@ -1,0 +1,70 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>Détails de la réponse</h2>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="loading">
+    <div class="col">
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="error">
+    <div class="col">
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!loading && response">
+    <div class="col">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h5 class="card-title mb-0">Réponse #{{ response.responseId }}</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <h6 class="fw-bold">ID Commentaire:</h6>
+            <p>{{ response.commentId }}</p>
+          </div>
+          <div class="mb-3">
+            <h6 class="fw-bold">ID Utilisateur:</h6>
+            <p>{{ response.userId }}</p>
+          </div>
+          <div class="mb-3" *ngIf="response.userName">
+            <h6 class="fw-bold">Nom d'utilisateur:</h6>
+            <p>{{ response.userName }}</p>
+          </div>
+          <div class="mb-3">
+            <h6 class="fw-bold">Contenu:</h6>
+            <p>{{ response.content }}</p>
+          </div>
+          <div class="mb-3">
+            <h6 class="fw-bold">Date de création:</h6>
+            <p>{{ response.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex gap-2">
+            <a [routerLink]="['/admin/responses/edit', response.responseId]" class="btn btn-warning">
+              <i class="fas fa-edit"></i> Modifier
+            </a>
+            <button (click)="deleteResponse(response.responseId!)" class="btn btn-danger">
+              <i class="fas fa-trash"></i> Supprimer
+            </button>
+            <a routerLink="/admin/responses" class="btn btn-secondary">
+              <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

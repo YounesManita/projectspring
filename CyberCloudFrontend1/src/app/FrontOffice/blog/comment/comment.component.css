@@ -1,0 +1,103 @@
+.comments-section {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.comment-avatar img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+}
+
+.comment-form textarea {
+    border-radius: 20px;
+    resize: none;
+    font-size: 0.95rem;
+    background-color: #f0f2f5;
+    border: 1px solid #e9ecef;
+}
+
+.comment-form textarea:focus {
+    background-color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+    border-color: #86b7fe;
+    height: 80px !important;
+    border-radius: 15px !important;
+}
+
+.comment-content {
+    background-color: #f0f2f5;
+    border-radius: 18px;
+    position: relative;
+}
+
+.comment-actions {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.action-buttons {
+    opacity: 0.7;
+}
+
+.action-buttons:hover {
+    opacity: 1;
+}
+
+.comment-item:hover .comment-actions {
+    opacity: 1 !important;
+}
+
+/* Assurer que les boutons sont toujours visibles sur mobile */
+@media (max-width: 768px) {
+    .comment-actions {
+        opacity: 0.8;
+    }
+}
+
+.comment-actions button {
+    transition: transform 0.2s ease;
+}
+
+.comment-actions button:hover {
+    transform: scale(1.1);
+}
+
+/* Style Facebook pour les actions de commentaire */
+.comment-actions-bar .btn-link {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: #65676b;
+}
+
+.comment-actions-bar .btn-link:hover {
+    text-decoration: underline;
+    color: #1877f2;
+}
+
+/* Style pour les champs de texte */
+textarea.form-control.rounded-pill {
+    resize: none;
+    transition: height 0.2s ease;
+    padding-top: 10px;
+}
+
+/* Animations */
+.animate__fadeIn {
+    animation-duration: 0.5s;
+}
+
+/* Responsive design */
+@media (max-width: 576px) {
+    .comment-avatar img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .comment-content {
+        font-size: 0.9rem;
+    }
+}

@@ -1,0 +1,70 @@
+<div class="responses-section mt-2">
+
+    <!-- Formulaire de réponse -->
+    <form *ngIf="showResponseForm" [formGroup]="responseForm" class="response-form mb-3 animate__animated animate__fadeIn">
+        <div class="d-flex gap-2">
+            <div class="response-avatar">
+                <img src="assets/img/default-avatar.svg" alt="User Avatar" class="rounded-circle" width="30" height="30">
+            </div>
+            <div class="flex-grow-1">
+                <div class="form-floating mb-2">
+                    <textarea 
+                        class="form-control form-control-sm" 
+                        id="content-{{commentId}}" 
+                        formControlName="content" 
+                        placeholder="Écrivez une réponse..."
+                        style="height: 80px"
+                        (keydown.enter)="$event.preventDefault(); onSubmit()"
+                    ></textarea>
+                    <label for="content">{{ isEditing ? 'Modifier votre réponse' : 'Écrivez une réponse...' }}</label>
+                </div>
+                <div class="d-flex justify-content-end gap-2">
+                    <button 
+                        *ngIf="isEditing" 
+                        type="button" 
+                        class="btn btn-light btn-sm rounded-pill"
+                        (click)="resetForm()"
+                    >
+                        Annuler
+                    </button>
+                    <button 
+                        type="button" 
+                        class="btn btn-primary btn-sm rounded-pill"
+                        [disabled]="responseForm.invalid"
+                        (click)="onSubmit()"
+                    >
+                        {{ isEditing ? 'Mettre à jour' : 'Répondre' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Liste des réponses -->
+    <div class="responses-list ms-4">
+        <div *ngFor="let response of responses" class="response-item mb-3 animate__animated animate__fadeIn">
+            <div class="d-flex gap-2">
+                <div class="response-avatar">
+                    <img src="assets/img/default-avatar.svg" alt="User Avatar" class="rounded-circle" width="30" height="30">
+                </div>
+                <div class="flex-grow-1">
+                    <div class="response-content p-2 rounded">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <h6 class="mb-0 small">{{ response.userName }}</h6>
+                            <div class="response-actions">
+                                <button class="btn btn-link btn-sm p-0 me-2" (click)="editResponse(response)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-link btn-sm p-0 text-danger" (click)="deleteResponse(response.responseId!)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="mb-1 small">{{ response.content }}</p>
+                        <small class="text-muted">{{ response.createdAt | date:'short' }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

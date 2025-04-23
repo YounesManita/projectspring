@@ -1,0 +1,44 @@
+.responses-section {
+    margin-left: 20px;
+}
+
+.response-avatar img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+}
+
+.response-form textarea {
+    border-radius: 15px;
+    resize: none;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.response-form textarea:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    border-color: #80bdff;
+}
+
+.response-content {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.response-actions {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.response-item:hover .response-actions {
+    opacity: 1;
+}
+
+.response-actions button {
+    font-size: 0.8rem;
+}
+
+.response-actions button:hover {
+    transform: scale(1.1);
+}

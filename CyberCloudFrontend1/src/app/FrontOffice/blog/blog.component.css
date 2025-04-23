@@ -1,0 +1,394 @@
+/* TinyMCE Content Preservation - Solution radicale et directe */
+.preserve-styles, .tinymce-content {
+    display: block;
+}
+
+/* Règle fondamentale: permettre aux styles de s'appliquer naturellement */
+.preserve-styles *, .tinymce-content * {
+    color: inherit;
+    background-color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+/* Règle cruciale: forcer l'application des styles inline */
+.preserve-styles [style], .tinymce-content [style] {
+    all: revert !important;
+}
+
+/* Règles spécifiques pour forcer l'application des styles de couleur et de fond */
+.preserve-styles [style*="color"], .tinymce-content [style*="color"] {
+    color: unset !important;
+}
+
+.preserve-styles [style*="background"], .tinymce-content [style*="background"] {
+    background: unset !important;
+}
+
+/* Règles supplémentaires pour garantir que les styles sont préservés */
+.preserve-styles span, .tinymce-content span,
+.preserve-styles p, .tinymce-content p,
+.preserve-styles div, .tinymce-content div,
+.preserve-styles h1, .tinymce-content h1,
+.preserve-styles h2, .tinymce-content h2,
+.preserve-styles h3, .tinymce-content h3,
+.preserve-styles h4, .tinymce-content h4,
+.preserve-styles h5, .tinymce-content h5,
+.preserve-styles h6, .tinymce-content h6 {
+    color: inherit;
+}
+
+/* Forcer l'application des styles inline pour tous les éléments avec style */
+.preserve-styles [style], .tinymce-content [style] {
+    color: unset !important;
+    background-color: unset !important;
+    font-weight: unset !important;
+    font-style: unset !important;
+    text-decoration: unset !important;
+}
+
+/* Préserver spécifiquement les styles de couleur pour tous les éléments */
+.preserve-styles span[style*="color"], 
+.preserve-styles p[style*="color"], 
+.preserve-styles div[style*="color"], 
+.preserve-styles h1[style*="color"], 
+.preserve-styles h2[style*="color"], 
+.preserve-styles h3[style*="color"], 
+.preserve-styles h4[style*="color"], 
+.preserve-styles h5[style*="color"], 
+.preserve-styles h6[style*="color"],
+.preserve-styles strong[style*="color"],
+.preserve-styles em[style*="color"],
+.preserve-styles a[style*="color"],
+.preserve-styles li[style*="color"] {
+    color: inherit !important;
+}
+
+/* Assurer que les styles de couleur de texte sont prioritaires */
+.tinymce-content [style*="color"],
+.post-content [style*="color"] {
+    color: unset !important;
+}
+
+/* Règle spécifique pour préserver les couleurs dans le contenu TinyMCE */
+.tinymce-content span[style*="color"],
+.tinymce-content p[style*="color"],
+.tinymce-content div[style*="color"],
+.tinymce-content h1[style*="color"],
+.tinymce-content h2[style*="color"],
+.tinymce-content h3[style*="color"],
+.tinymce-content h4[style*="color"],
+.tinymce-content h5[style*="color"],
+.tinymce-content h6[style*="color"],
+.tinymce-content strong[style*="color"],
+.tinymce-content em[style*="color"],
+.tinymce-content a[style*="color"],
+.tinymce-content li[style*="color"] {
+    color: unset !important;
+}
+
+/* Règle pour préserver toutes les couleurs dans TinyMCE */
+[contenteditable="true"] [style*="color"],
+.tox-edit-area [style*="color"],
+.mce-content-body [style*="color"],
+.tinymce-content [style*="color"] {
+    color: unset !important;
+}
+
+/* Règle pour s'assurer que les styles inline ne sont pas écrasés */
+.preserve-styles *[style],
+.tinymce-content *[style] {
+    all: revert !important;
+    color: unset !important;
+    background-color: unset !important;
+    font-weight: unset !important;
+    font-style: unset !important;
+    text-decoration: unset !important;
+}
+
+/* Règles supplémentaires pour forcer l'application des styles inline */
+.preserve-styles [style],
+.tinymce-content [style] {
+    all: initial !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+}
+
+.preserve-styles [style*="color"],
+.tinymce-content [style*="color"] {
+    color: attr(style color) !important;
+}
+
+/* Désactiver les styles qui pourraient interférer */
+.preserve-styles,
+.tinymce-content {
+    color: initial !important;
+    background-color: initial !important;
+}
+
+/* Forcer l'application des styles inline pour tous les éléments */
+.preserve-styles *,
+.tinymce-content * {
+    color: inherit !important;
+}
+
+/* Puis permettre aux styles inline de prendre le dessus */
+.preserve-styles *[style*="color"],
+.tinymce-content *[style*="color"] {
+    color: unset !important;
+}
+
+/* Card Layout */
+.posts-slider {
+    position: relative;
+    padding: 0 50px;
+}
+
+.posts-container {
+    display: flex;
+    gap: 20px;
+    overflow: hidden;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.post-card {
+    flex: 0 0 calc(33.333% - 14px);
+    transition: transform 0.3s ease;
+}
+
+.e-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.e-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.e-card-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.e-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.e-card:hover .e-card-image img {
+    transform: scale(1.05);
+}
+
+.e-card-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.e-card-header-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.e-card-sub-title {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+/* Dropdown menu styling */
+.dropdown button {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.dropdown .dropdown-menu {
+    min-width: 160px;
+    padding: 8px 0;
+    margin: 0;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: absolute;
+    right: 0;
+    left: auto;
+    transform-origin: top right;
+    overflow: visible;
+}
+
+.dropdown .dropdown-item {
+    padding: 8px 16px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.dropdown .dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.e-card-content {
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.e-card-actions {
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+/* Pagination Arrows */
+.btn-prev, .btn-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 10;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0d6efd;
+    font-size: 1.2rem;
+}
+
+.btn-prev {
+    left: 0;
+}
+
+.btn-next {
+    right: 0;
+}
+
+.btn-prev:disabled, .btn-next:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    color: #6c757d;
+}
+
+/* Page Indicator */
+.page-indicator {
+    background: #f8f9fa;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+/* Carousel Indicators */
+.carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 3px;
+    background-color: rgba(255,255,255,0.5);
+    border: none;
+}
+
+.carousel-indicators .active {
+    background-color: #fff;
+}
+
+/* Reaction Panel Styles */
+.reaction-panel {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background-color: white;
+    border-radius: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    display: flex;
+    padding: 8px;
+    z-index: 100;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.reaction-item {
+    background: none;
+    border: none;
+    padding: 5px;
+    margin: 0 2px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: transform 0.2s;
+}
+
+.reaction-item:hover {
+    transform: scale(1.2);
+    background-color: rgba(0,0,0,0.05);
+}
+
+.reaction-item img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Dropdown Menu Show/Hide */
+.dropdown-menu.show {
+    display: block;
+    z-index: 1050;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .post-card {
+        flex: 0 0 calc(50% - 10px);
+    }
+}
+
+@media (max-width: 768px) {
+    .post-card {
+        flex: 0 0 100%;
+    }
+    
+    .posts-container {
+        padding: 0 15px;
+    }
+    
+    .btn-prev, .btn-next {
+        width: 30px;
+        height: 30px;
+        font-size: 1rem;
+    }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px 0;
+        z-index: 100;
+      }
+      
+      .dropdown-menu.show {
+        display: block;
+      }
+    
+     
+}
