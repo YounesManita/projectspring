@@ -1,0 +1,71 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>{{ isEditMode ? 'Modifier' : 'Créer' }} une réponse</h2>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="loading">
+    <div class="col">
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="error">
+    <div class="col">
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!loading">
+    <div class="col">
+      <form [formGroup]="responseForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="commentId" class="form-label">ID Commentaire</label>
+          <input type="number" class="form-control" id="commentId" formControlName="commentId" [readonly]="commentId !== null">
+          <div *ngIf="responseForm.get('commentId')?.invalid && (responseForm.get('commentId')?.dirty || responseForm.get('commentId')?.touched)" class="text-danger">
+            <small *ngIf="responseForm.get('commentId')?.errors?.['required']">L'ID du commentaire est requis.</small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="userId" class="form-label">ID Utilisateur</label>
+          <input type="number" class="form-control" id="userId" formControlName="userId">
+          <div *ngIf="responseForm.get('userId')?.invalid && (responseForm.get('userId')?.dirty || responseForm.get('userId')?.touched)" class="text-danger">
+            <small *ngIf="responseForm.get('userId')?.errors?.['required']">L'ID utilisateur est requis.</small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="userName" class="form-label">Nom d'utilisateur</label>
+          <input type="text" class="form-control" id="userName" formControlName="userName">
+          <div *ngIf="responseForm.get('userName')?.invalid && (responseForm.get('userName')?.dirty || responseForm.get('userName')?.touched)" class="text-danger">
+            <small *ngIf="responseForm.get('userName')?.errors?.['required']">Le nom d'utilisateur est requis.</small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="content" class="form-label">Contenu</label>
+          <textarea class="form-control" id="content" rows="4" formControlName="content"></textarea>
+          <div *ngIf="responseForm.get('content')?.invalid && (responseForm.get('content')?.dirty || responseForm.get('content')?.touched)" class="text-danger">
+            <small *ngIf="responseForm.get('content')?.errors?.['required']">Le contenu est requis.</small>
+            <small *ngIf="responseForm.get('content')?.errors?.['minlength']">Le contenu doit contenir au moins 3 caractères.</small>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="responseForm.invalid || loading">
+            {{ isEditMode ? 'Mettre à jour' : 'Créer' }}
+          </button>
+          <a routerLink="/admin/responses" class="btn btn-secondary">Annuler</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

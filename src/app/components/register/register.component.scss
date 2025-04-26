@@ -1,0 +1,46 @@
+.title-border-radius {
+  border-radius: 10px;
+}
+
+.btn-border-radius {
+  border-radius: 30px;
+}
+
+.form-control, .form-select {
+  &:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+    border-color: var(--bs-primary);
+  }
+}
+
+.form-check-input:checked {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+// Animation for the fadeIn effect
+.wow {
+  visibility: hidden;
+}
+
+.fadeIn {
+  animation-name: fadeIn;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .display-3 {
+    font-size: 2.5rem;
+  }
+}

@@ -1,0 +1,86 @@
+<div class="comments-section">
+    <!-- Compteur de commentaires -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Commentaires <span class="badge bg-primary rounded-pill">{{ commentCount$ | async }}</span></h6>
+    </div>
+    
+    <!-- Formulaire de commentaire style Facebook -->
+    <form [formGroup]="commentForm" class="comment-form mb-3">
+        <div class="d-flex align-items-start">
+            <div class="comment-avatar me-2">
+                <img src="https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg?w=360" alt="User Avatar" class="rounded-circle" width="40" height="40">
+            </div>
+            <div class="flex-grow-1 position-relative">
+                <div class="input-group">
+                    <textarea 
+                        class="form-control rounded-pill "
+                        id="comment-input-{{postId}}" 
+                        formControlName="content" 
+                        placeholder="{{ isEditing ? 'Modifier votre commentaire' : 'Écrivez un commentaire...' }}"
+                        style="height: 40px; padding-right: 70px;"
+                        #commentTextarea
+                        (keydown.enter)="$event.preventDefault(); onSubmit(); focusCommentInput()"
+                    ></textarea>
+                  
+                </div>
+                <div class="d-flex justify-content-end mt-2" *ngIf="commentForm.valid || isEditing">
+                    <button 
+                        *ngIf="isEditing" 
+                        type="button" 
+                        class="btn btn-light btn-sm rounded-pill me-2"
+                        (click)="resetForm()"
+                    >
+                        Annuler
+                    </button>
+                    <button 
+                        type="button" 
+                        class="btn btn-primary btn-sm rounded-pill"
+                        [disabled]="commentForm.invalid"
+                        (click)="onSubmit(); focusCommentInput()"
+                    >
+                        {{ isEditing ? 'Mettre à jour' : 'Commenter' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Liste des commentaires style Facebook -->
+    <div class="comments-list">
+        <div *ngFor="let comment of comments" class="comment-item mb-3 animate__animated animate__fadeIn">
+            <div class="d-flex">
+                <div class="comment-avatar me-2">
+                    <img src="https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg?w=360" alt="User Avatar" class="rounded-circle" width="40" height="40">
+                </div>
+                <div class="flex-grow-1">
+                    <div class="comment-content p-2 px-3 rounded bg-light" style="background-color:   #f8f9fa !important;">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h6 class="mb-0 fw-bold">{{ comment.user?.firstName }} {{' '}} {{ comment.user?.lastName }}</h6>
+                            <div class="comment-actions action-buttons" *ngIf="comment.user?.id== iduser">
+                                <button class="btn btn-link btn-sm p-0 me-2" (click)="editComment(comment)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-link btn-sm p-0 text-danger" (click)="deleteComment(comment.commentId!)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="mb-1" >{{ comment.content }}</p>
+                    </div>
+                    
+                    <!-- Actions de commentaire -->
+                    <div class="comment-actions-bar ps-2 mt-1">
+                        <button class="btn btn-link btn-sm p-0 me-3 text-muted">J'aime</button>
+                        <button class="btn btn-link btn-sm p-0 me-3 text-muted" (click)="toggleResponseForm(comment.commentId!)">Répondre</button>
+                        <small class="text-muted">{{ comment.createdAt | date:'dd MMM à HH:mm' }}</small>
+                    </div>
+                    
+                    <!-- Composant de réponses aux commentaires -->
+                    <div class="ms-4 mt-2">
+                        <app-comment-response *ngIf="comment.commentId" [commentId]="comment.commentId" #responseComponent></app-comment-response>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

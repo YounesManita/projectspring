@@ -1,0 +1,51 @@
+<!-- Spinner de chargement -->
+<div *ngIf="isLoading" class="loading-spinner">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Chargement...</span>
+  </div>
+</div>
+
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">
+      <span class="page-title-icon bg-gradient-primary text-white me-2">
+        <i class="mdi mdi-chart-bar"></i>
+      </span> Statistiques du Blog
+    </h3>
+  </div>
+
+  <div class="btn-group mb-4">
+    <button class="btn btn-outline-primary" (click)="switchView('daily')">Par jour</button>
+    <button class="btn btn-outline-primary" (click)="switchView('monthly')">Par mois</button>
+    <button class="btn btn-outline-primary" (click)="switchView('yearly')">Par an</button>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Articles {{ currentViewLabel }}</h4>
+          <canvas #postsChart></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Commentaires {{ currentViewLabel }}</h4>
+          <canvas #commentsChart></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Réactions {{ currentViewLabel }}</h4>
+          <div>
+            <canvas #reactionsChart style="height: 700px;"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

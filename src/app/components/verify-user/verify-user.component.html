@@ -1,0 +1,108 @@
+<!-- src/app/components/verify-user/verify-user.component.html -->
+<div class="container-fluid py-5">
+  <div class="container py-5">
+    <div class="p-5 bg-light rounded">
+      <div class="mx-auto text-center wow fadeIn" data-wow-delay="0.1s" style="max-width: 700px;">
+        <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">
+          Account Verification</h4>
+        <h1 class="display-3">Verify Your Account</h1>
+        <p class="mb-5" *ngIf="!showVerificationForm || isVerifying">Please wait while we verify your account...</p>
+        <p class="mb-5" *ngIf="showVerificationForm && !isVerifying">Please enter the verification code sent to your
+          email</p>
+      </div>
+      <div class="row g-5 justify-content-center">
+        <div class="col-lg-8 wow fadeIn" data-wow-delay="0.3s">
+          <!-- Loading spinner while verifying -->
+          <div *ngIf="isVerifying" class="text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Verifying your account...</p>
+          </div>
+
+          <!-- Success message -->
+          <div *ngIf="isSuccess" class="text-center">
+            <div class="alert alert-success">
+              <i class="fas fa-check-circle fa-4x mb-3"></i>
+              <h3>Verification Successful!</h3>
+              <p>{{ successMessage }}</p>
+              <div class="mt-4">
+                <p>Redirecting to login page in a few seconds...</p>
+                <a routerLink="/login" class="btn btn-primary">Login Now</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Verification form -->
+          <div *ngIf="showVerificationForm && !isVerifying && !isSuccess">
+            <form [formGroup]="verifyForm" (ngSubmit)="verifyAccount()">
+              <div class="row">
+                <div class="col-12 mb-4">
+                  <label for="email" class="form-label">Email Address</label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="w-100 form-control py-3 border-primary"
+                    placeholder="Your email address"
+                    formControlName="email"
+                    [readonly]="!!email">
+                  <div *ngIf="verifyForm.get('email')?.invalid && verifyForm.get('email')?.touched"
+                       class="text-danger mt-1">
+                    Please enter a valid email address
+                  </div>
+                </div>
+                <div class="col-12 mb-4">
+                  <label for="code" class="form-label">Verification Code</label>
+                  <input
+                    type="text"
+                    id="code"
+                    class="w-100 form-control py-3 border-primary"
+                    placeholder="Enter verification code"
+                    formControlName="code">
+                  <div *ngIf="verifyForm.get('code')?.invalid && verifyForm.get('code')?.touched"
+                       class="text-danger mt-1">
+                    Verification code is required
+                  </div>
+                </div>
+                <div class="col-12">
+                  <button
+                    class="w-100 btn btn-primary form-control py-3 border-primary text-white bg-primary btn-border-radius"
+                    type="submit"
+                    [disabled]="verifyForm.invalid">
+                    Verify Account
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <div *ngIf="errorMessage" class="alert alert-danger mt-4">
+              {{ errorMessage }}
+            </div>
+
+            <div *ngIf="successMessage" class="alert alert-success mt-4">
+              {{ successMessage }}
+            </div>
+          </div>
+
+          <!-- Error message for automatic verification -->
+          <div *ngIf="!isVerifying && !isSuccess && !showVerificationForm && errorMessage" class="text-center">
+            <div class="alert alert-danger">
+              <i class="fas fa-times-circle fa-4x mb-3"></i>
+              <h3>Verification Failed</h3>
+              <p>{{ errorMessage }}</p>
+              <div class="mt-4">
+                <button (click)="showVerificationForm = true" class="btn btn-primary">
+                  Enter Verification Code Manually
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-4" *ngIf="!isVerifying">
+            <p>Return to <a routerLink="/" class="text-primary">Home</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

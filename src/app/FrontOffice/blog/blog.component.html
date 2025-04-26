@@ -1,0 +1,507 @@
+<!-- Blog Start -->
+<div class="container-fluid blog py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center wow fadeIn" data-wow-delay="0.1s" style="max-width: 600px;">
+            <h1 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">Last Posts</h1>
+            <h4 class="mb-5 display-3">Discover our Blog</h4>
+        </div>
+        
+        <!-- Search and Filter Section -->
+        <div class="row filter mb-4">
+            <div class="col-lg-6">
+                <div class="position-relative search-input-container">
+                    <input type="text" class="form-control search-input" required id="search_Card" aria-label="search" (input)="filterPosts($event)" placeholder="Rechercher un article...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+            <div class="col-lg-6 d-flex justify-content-end">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm" [ngClass]="sortOrder === 'newest' ? 'btn-primary' : 'btn-light'" (click)="changeSortOrder('newest')">
+                        <i class="fas fa-sort-amount-down me-2"></i>Plus récent
+                    </button>
+                    <button type="button" class="btn btn-sm" [ngClass]="sortOrder === 'oldest' ? 'btn-primary' : 'btn-light'" (click)="changeSortOrder('oldest')">
+                        <i class="fas fa-sort-amount-up me-2"></i>Plus ancien
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Post Card -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-12">
+                <div class="card shadow-sm rounded-lg border-0 mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg?w=360" alt="User Avatar" class="rounded-circle me-3" width="50" height="50">
+                            <div class="form-control rounded-pill bg-light" 
+                                 style="cursor: pointer;" 
+                                 data-bs-toggle="modal" 
+                                 data-bs-target="#blog-modal" 
+                                 (click)="resetForm()">
+                                Add a new post ?
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center border-top pt-3">
+                            <button type="button" class="btn btn-light rounded-pill me-2" data-bs-toggle="modal" data-bs-target="#blog-modal" (click)="resetForm()">
+                                <i class="fas fa-image text-success me-2"></i>Photo
+                            </button>
+                            <button type="button" class="btn btn-light rounded-pill" data-bs-toggle="modal" data-bs-target="#blog-modal" (click)="resetForm()">
+                                <i class="fas fa-plus text-primary me-2"></i>Créer un post
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div *ngIf="filteredPosts.length === 0" class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle me-2"></i>Aucune publication trouvée. Soyez le premier à partager quelque chose !
+                </div>
+            </div>
+        </div>
+
+        <!-- Posts Feed with Arrows -->
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="position-relative posts-slider">
+                    <!-- Left Arrow -->
+                    <button class="btn btn-prev" (click)="prevPage()" [disabled]="currentPage === 1">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    <!-- Posts Container -->
+                    <div class="posts-container">
+                        <div *ngFor="let post of paginatedPosts" class="post-card wow fadeIn" data-wow-delay="0.1s">
+                            <div class="e-card">
+                                <!-- Image Carousel -->
+                                <div *ngIf="post.images && post.images.length > 0" class="e-card-image">
+                                    <div id="carousel-{{post.postId}}" class="carousel slide" data-bs-ride="carousel">
+                                        <div style="display: flex;">
+                                            <img 
+                                              src="https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg?w=360" 
+                                              alt="User Avatar"
+                                              style="width: 30px; height: 30px; object-fit: cover; border-radius: 50%; border: 2px solid #2d0ce7;"
+                                            />
+                                            <h6 class="mb-0 fw-bold" style="margin-top: 7px; margin-left: 10px;">
+                                              {{post.user.firstName}} {{post.user.lastName}}
+                                            </h6>  
+                                            </div> 
+                                        <div class="carousel-indicators">
+                                            <button *ngFor="let image of post.images; let i = index" 
+                                                    type="button" 
+                                                    [attr.data-bs-target]="'#carousel-' + post.postId" 
+                                                    [attr.data-bs-slide-to]="i" 
+                                                    [class.active]="i === 0" 
+                                                    [attr.aria-current]="i === 0 ? 'true' : null" 
+                                                    [attr.aria-label]="'Slide ' + (i+1)">
+                                            </button>
+                                        </div>
+                                        
+                                        <!-- Carousel Items -->
+                                        <div class="carousel-inner rounded">
+                                            <div *ngFor="let image of post.images; let i = index" 
+                                                 class="carousel-item" 
+                                                 [class.active]="i === 0">
+                                                <img [src]="image.url" 
+                                                     class="d-block w-100" 
+                                                     [alt]="image.description || 'Image ' + (i+1)" 
+                                                     style="height: 200px; object-fit: contain; background-color: #f8f9fa;"
+                                                     (error)="handleImageError($event)">
+                                            </div>
+                                        </div>
+                                        <!-- Controls -->
+                                        <button class="carousel-control-prev" type="button" [attr.data-bs-target]="'#carousel-' + post.postId" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" [attr.data-bs-target]="'#carousel-' + post.postId" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Post Header -->
+                                <div class="e-card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="e-card-header-caption">
+                                            <div class="e-card-header-title">{{ post.title }}</div>
+                                            <div class="e-card-sub-title">
+                                                <small class="text-muted">
+                                                    Posté le {{ post.createdAt | date:'dd MMMM, yyyy à HH:mm' }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown" *ngIf="post.user.id === iduser" >
+                                            <button class="btn btn-sm btn-light border-0 bg-transparent" (click)="showDropdownMenu(post.postId)">
+                                              <i class="fas fa-ellipsis-h"></i>
+                                            </button>
+                                            <div id="dropdown-menu-{{post.postId}}" class="dropdown-menu bg-white" >
+                                                <button class="dropdown-item text-dark" ngbDropdownItem (click)="editPost(post); $event.stopPropagation()">
+                                                    <i class="fas fa-edit me-2"></i> Modifier
+                                                </button>
+                                                <div class="dropdown-divider"></div>
+                                                <button class="dropdown-item text-danger" ngbDropdownItem (click)="deletePost(post); $event.stopPropagation()">
+                                                    <i class="fas fa-trash me-2"></i> Supprimer
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                                <!-- Post Content -->
+                                <div class="e-card-content">
+                                    <div *ngIf="!expandedPosts[post.postId]" class="tinymce-content">
+                                        <div [innerHTML]="post.content | slice:0:100" class="preserve-styles"></div><span *ngIf="post.content.length > 100">...</span>
+                                    </div>
+                                    <div *ngIf="expandedPosts[post.postId]" [innerHTML]="post.content" class="preserve-styles">
+                                    </div>
+                                    <button *ngIf="post.content.length > 100" 
+                                            class="btn btn-link p-0 text-primary" 
+                                            (click)="openPostDetailModal(post); $event.stopPropagation()">
+                                        Lire la suite
+                                    </button>
+                                </div>
+                                
+                                <!-- Post Footer with Reactions and Comments -->
+                                <div class="e-card-actions">
+                                    <!-- Reactions -->
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="reactions">
+                                            <div class="d-flex align-items-center">
+                                                <div class="reaction-icons-display position-relative me-2" *ngIf="post.reaction">
+                                                    <img *ngIf="post.reaction === 'LIKE'" src="assets/img/reactions/like.svg" alt="J'aime" width="24" height="24" class="reaction-icon">
+                                                    <img *ngIf="post.reaction === 'LOVE'" src="assets/img/reactions/love.svg" alt="J'adore" width="24" height="24" class="reaction-icon">
+                                                    <img *ngIf="post.reaction === 'HAHA'" src="assets/img/reactions/haha.svg" alt="Haha" width="24" height="24" class="reaction-icon">
+                                                    <img *ngIf="post.reaction === 'SAD'" src="assets/img/reactions/sad.svg" alt="Triste" width="24" height="24" class="reaction-icon">
+                                                    <img *ngIf="post.reaction === 'ANGRY'" src="assets/img/reactions/angry.svg" alt="Grrr" width="24" height="24" class="reaction-icon">
+                                                    <img *ngIf="post.reaction === 'DISLIKE'" src="assets/img/reactions/dislike.svg" alt="Dislike" width="24" height="24" class="reaction-icon">
+                                                </div>
+                                                <span class="text-muted small">{{ post.reaction ? '1' : '0' }}</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted" style="cursor: pointer;" (click)="openPostDetailModal(post); $event.stopPropagation()">{{ commentCounts[post.postId] || 0 }} commentaires</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Reaction Buttons -->
+                                    <div class="d-flex justify-content-between border-top pt-2">
+                                        <div class="position-relative">
+                                            <button class="btn btn-link text-dark flex-fill reaction-btn" 
+                                                    [ngClass]="{'text-primary': post.reaction === 'LIKE'}"
+                                                    (mouseenter)="showReactionPanel(post.postId)" 
+                                                    (mouseleave)="hideReactionPanel(post.postId)">
+                                                <i class="far fa-thumbs-up me-1"></i> J'aime
+                                            </button>
+                                            
+                                            <!-- Reaction Panel -->
+                                            <div id="reaction-panel-{{post.postId}}" class="reaction-panel d-none" 
+                                                 (mouseenter)="showReactionPanel(post.postId)" 
+                                                 (mouseleave)="hideReactionPanel(post.postId)">
+                                                <button class="reaction-item" (click)="reactToPost(post, 'LIKE')">
+                                                    <img src="assets/img/reactions/like.svg" alt="J'aime" width="24" height="24">
+                                                </button>
+                                                <button class="reaction-item" (click)="reactToPost(post, 'LOVE')">
+                                                    <img src="assets/img/reactions/love.svg" alt="J'adore" width="24" height="24">
+                                                </button>
+                                                <button class="reaction-item" (click)="reactToPost(post, 'HAHA')">
+                                                    <img src="assets/img/reactions/haha.svg" alt="Haha" width="24" height="24">
+                                                </button>
+                                                <button class="reaction-item" (click)="reactToPost(post, 'SAD')">
+                                                    <img src="assets/img/reactions/sad.svg" alt="Triste" width="24" height="24">
+                                                </button>
+                                                <button class="reaction-item" (click)="reactToPost(post, 'ANGRY')">
+                                                    <img src="assets/img/reactions/angry.svg" alt="Grrr" width="24" height="24">
+                                                </button>
+                                                <button class="reaction-item" (click)="reactToPost(post, 'DISLIKE')">
+                                                    <img src="assets/img/reactions/dislike.svg" alt="Dislike" width="24" height="24">
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-link text-dark flex-fill" 
+                                                (click)="openPostDetailModal(post); $event.stopPropagation()">
+                                            <i class="far fa-comment me-1"></i> Commenter
+                                        </button>
+                                        <div class="dropdown position-relative">
+                                            <button class="btn btn-link text-dark flex-fill" id="shareDropdown-{{post.postId}}" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-share me-1"></i> Partager
+                                            </button>
+                                            <ul class="dropdown-menu" [attr.aria-labelledby]="'shareDropdown-' + post.postId">
+                                                <li><a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{encodeURIComponent(location.href)}}" target="_blank"><i class="fab fa-facebook text-primary me-2"></i>Facebook</a></li>
+                                                <li><a class="dropdown-item" href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram text-danger me-2"></i>Instagram</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Arrow -->
+                    <button class="btn btn-next" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Indicator -->
+        <div class="row justify-content-center mt-3">
+            <div class="col-12 text-center">
+                <span class="page-indicator">
+                    Page {{currentPage}} sur {{totalPages}}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Creating/Editing Posts -->
+<div class="modal fade" id="blog-modal" tabindex="-1" aria-labelledby="blogModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content rounded-0">
+            <form [formGroup]="blogForm">
+                <div class="modal-header border-0">
+                    <h4 class="modal-title text-primary">{{ isEditing ? 'Modify the post' : 'Create a post' }}</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetForm()"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="form-floating mb-4">
+                        <input type="text" class="form-control" id="title" formControlName="title" placeholder="Titre de l'article" />
+                        <label for="title">Title</label>
+                    </div>
+                    <div class="form-floating mb-4">
+                        <editor
+            [init]="editorConfig"
+            id="content"
+            formControlName="content"
+          ></editor>
+                        
+                    </div>
+                    <!-- Upload d'images avec le nouveau composant -->
+                    <div class="mb-4">
+                        <label class="form-label">Images</label>
+                        <app-image-upload 
+                            [(images)]="selectedImages">
+                        </app-image-upload>
+                    </div>
+                    
+                    <button class="btn btn-primary mb-3" (click)="addInput()">Ajouter une image</button>
+
+                    <div *ngFor="let form of imageForms; let i = index" class="mb-4">
+                      <form #textForm="ngForm" (ngSubmit)="onSubmitPhoto(textForm, i)">
+                        <input type="text" class="form-control" name="text" [(ngModel)]="form.description" required>
+                        <input type="submit" class="btn btn-success mt-2" value="Générer l'image">
+                      </form>
+                    
+                      <div class="mt-3">
+                        <img *ngIf="form.imageUrl" [src]="form.imageUrl" alt="Image générée" class="img-fluid" />
+                      </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal" (click)="resetForm()">Close</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" (click)="onSubmit()">
+                        {{ isEditing ? 'Update' : 'Create' }}
+                    </button>
+                   
+                    
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- Blog Section End -->
+
+<!-- Modal for Post Details -->
+<div class="modal fade" id="post-detail-modal" tabindex="-1" aria-labelledby="postDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="postDetailModalLabel">{{ selectedPost?.title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0" *ngIf="selectedPost">
+                <!-- Image Carousel -->
+                <div *ngIf="selectedPost.images && selectedPost.images.length > 0" class="card-img-top">
+                    <div id="carousel-detail" class="carousel slide" data-bs-ride="carousel">
+                        <!-- Indicators -->
+                        <div class="carousel-indicators">
+                            <button *ngFor="let image of selectedPost.images; let i = index" 
+                                    type="button" 
+                                    data-bs-target="#carousel-detail" 
+                                    [attr.data-bs-slide-to]="i" 
+                                    [class.active]="i === 0" 
+                                    [attr.aria-current]="i === 0 ? 'true' : null" 
+                                    [attr.aria-label]="'Slide ' + (i+1)">
+                            </button>
+                        </div>
+                        
+                        <!-- Carousel Items -->
+                        <div class="carousel-inner">
+                            <div *ngFor="let image of selectedPost.images; let i = index" 
+                                 class="carousel-item" 
+                                 [class.active]="i === 0">
+                                <img [src]="image.url" 
+                                     class="d-block w-100" 
+                                     [alt]="image.description || 'Image ' + (i+1)" 
+                                     style="height: 400px; object-fit: contain; background-color: #f8f9fa;">
+                            </div>
+                        </div>
+                        
+                        <!-- Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel-detail" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carousel-detail" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Post Content -->
+                <div class="p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <small class="text-muted">Posté le {{ selectedPost.createdAt | date:'dd MMMM, yyyy à HH:mm' }}</small>
+                        </div>
+                        <div class="dropdown" *ngIf="selectedPost.postId">
+                            <button class="btn btn-sm btn-light border-0 bg-transparent" (click)="showDropdownMenu('modal-' + selectedPost.postId)">
+                              <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                            <div id="dropdown-menu-modal-{{selectedPost.postId}}" class="dropdown-menu bg-white">
+                                <button class="dropdown-item text-dark" ngbDropdownItem (click)="editPost(selectedPost); $event.stopPropagation()">
+                                    <i class="fas fa-edit me-2"></i> Modifier
+                                </button>
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item text-danger" ngbDropdownItem (click)="deletePost(selectedPost); $event.stopPropagation()">
+                                    <i class="fas fa-trash me-2"></i> Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-content mb-4">
+                        <div [innerHTML]="selectedPost.content" class="preserve-styles"></div>
+                    </div>
+                    
+                    <!-- Reactions Section -->
+                    <div class="d-flex justify-content-between align-items-center mb-3 border-top border-bottom py-2">
+                        <div class="reactions">
+                            <div class="d-flex align-items-center">
+                                <div class="reaction-icons-display position-relative me-2" *ngIf="selectedPost.reaction">
+                                    <img *ngIf="selectedPost.reaction === 'LIKE'" src="assets/img/reactions/like.svg" alt="J'aime" width="24" height="24" class="reaction-icon">
+                                    <img *ngIf="selectedPost.reaction === 'LOVE'" src="assets/img/reactions/love.svg" alt="J'adore" width="24" height="24" class="reaction-icon">
+                                    <img *ngIf="selectedPost.reaction === 'HAHA'" src="assets/img/reactions/haha.svg" alt="Haha" width="24" height="24" class="reaction-icon">
+                                    <img *ngIf="selectedPost.reaction === 'SAD'" src="assets/img/reactions/sad.svg" alt="Triste" width="24" height="24" class="reaction-icon">
+                                    <img *ngIf="selectedPost.reaction === 'ANGRY'" src="assets/img/reactions/angry.svg" alt="Grrr" width="24" height="24" class="reaction-icon">
+                                    <img *ngIf="selectedPost.reaction === 'DISLIKE'" src="assets/img/reactions/dislike.svg" alt="Dislike" width="24" height="24" class="reaction-icon">
+                                </div>
+                                <span class="text-muted small">{{ selectedPost.reaction ? '1' : '0' }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <small class="text-muted">{{ commentCounts[selectedPost.postId] || 0 }} commentaires</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Reaction Buttons -->
+                    <div class="d-flex justify-content-between mb-4">
+                        <div class="position-relative">
+                            <button class="btn btn-link text-dark flex-fill reaction-btn" 
+                                    [ngClass]="{'text-primary': selectedPost.reaction === 'LIKE'}"
+                                    (mouseenter)="showReactionPanel('modal-' + selectedPost.postId)" 
+                                    (mouseleave)="hideReactionPanel('modal-' + selectedPost.postId)">
+                                <i class="far fa-thumbs-up me-1"></i> J'aime
+                            </button>
+                            
+                            <!-- Reaction Panel -->
+                            <div id="reaction-panel-modal-{{selectedPost.postId}}" class="reaction-panel d-none" 
+                                 (mouseenter)="showReactionPanel('modal-' + selectedPost.postId)" 
+                                 (mouseleave)="hideReactionPanel('modal-' + selectedPost.postId)">
+                                <button class="reaction-item" (click)="reactToPost(selectedPost, 'LIKE')">
+                                    <img src="assets/img/reactions/like.svg" alt="J'aime" width="24" height="24">
+                                </button>
+                                <button class="reaction-item" (click)="reactToPost(selectedPost, 'LOVE')">
+                                    <img src="assets/img/reactions/love.svg" alt="J'adore" width="24" height="24">
+                                </button>
+                                <button class="reaction-item" (click)="reactToPost(selectedPost, 'HAHA')">
+                                    <img src="assets/img/reactions/haha.svg" alt="Haha" width="24" height="24">
+                                </button>
+                                <button class="reaction-item" (click)="reactToPost(selectedPost, 'SAD')">
+                                    <img src="assets/img/reactions/sad.svg" alt="Triste" width="24" height="24">
+                                </button>
+                                <button class="reaction-item" (click)="reactToPost(selectedPost, 'ANGRY')">
+                                    <img src="assets/img/reactions/angry.svg" alt="Grrr" width="24" height="24">
+                                </button>
+                                <button class="reaction-item" (click)="reactToPost(selectedPost, 'DISLIKE')">
+                                    <img src="assets/img/reactions/dislike.svg" alt="Dislike" width="24" height="24">
+                                </button>
+                            </div>
+                        </div>
+                        <button class="btn btn-link text-dark flex-fill">
+                            <i class="far fa-comment me-1"></i> Commenter
+                        </button>
+                        <div class="dropdown position-relative">
+                            <button class="btn btn-link text-dark flex-fill" id="shareDropdown-modal-{{selectedPost.postId}}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-share me-1"></i> Partager
+                            </button>
+                            <ul class="dropdown-menu" [attr.aria-labelledby]="'shareDropdown-modal-' + selectedPost.postId">
+                                <li><a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{encodeURIComponent(location.href)}}" target="_blank"><i class="fab fa-facebook text-primary me-2"></i>Facebook</a></li>
+                                <li><a class="dropdown-item" href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram text-danger me-2"></i>Instagram</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Comments Section -->
+                    <div class="comments-section">
+                     
+                        <app-comment [postId]="selectedPost.postId" (commentCountChanged)="updateCommentCount(selectedPost.postId, $event)"></app-comment>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+.search-input-container {
+    position: relative;
+}
+
+.search-input {
+    padding: 12px 20px;
+    padding-right: 40px;
+    border-radius: 25px;
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    background-color: #fff;
+}
+
+.search-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #757575;
+    pointer-events: none;
+}
+</style>
+
+

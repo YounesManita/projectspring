@@ -1,0 +1,71 @@
+<div style="height: 100px;"></div>
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>Détails du commentaire</h2>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="loading">
+    <div class="col">
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="error">
+    <div class="col">
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!loading && comment">
+    <div class="col">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h5 class="card-title mb-0">Commentaire #{{ comment.commentId }}</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <h6 class="fw-bold">ID Article:</h6>
+            <p>{{ comment.postId }}</p>
+          </div>
+          <div class="mb-3">
+            <h6 class="fw-bold">ID Utilisateur:</h6>
+            <p>{{ comment.userId || '-' }}</p>
+          </div>
+          <div class="mb-3" *ngIf="comment.userName">
+            <h6 class="fw-bold">Nom d'utilisateur:</h6>
+            <p>{{ comment.userName }}</p>
+          </div>
+          <div class="mb-3">
+            <h6 class="fw-bold">Contenu:</h6>
+            <p>{{ comment.content }}</p>
+          </div>
+          <div class="mb-3">
+            <h6 class="fw-bold">Date de création:</h6>
+            <p>{{ comment.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex gap-2">
+            <a [routerLink]="['/admin/comments/edit', comment.commentId]" class="btn btn-warning">
+              <i class="fas fa-edit"></i> Modifier
+            </a>
+            <button (click)="deleteComment(comment.commentId!)" class="btn btn-danger">
+              <i class="fas fa-trash"></i> Supprimer
+            </button>
+            <a routerLink="/admin/comments" class="btn btn-secondary">
+              <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

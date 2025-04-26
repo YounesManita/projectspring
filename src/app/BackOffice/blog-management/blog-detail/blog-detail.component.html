@@ -1,0 +1,59 @@
+<div style="height: 100px;"></div>
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>Détails de l'Article</h2>
+      <div class="btn-group">
+        <a routerLink="/admin/blogs" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> Retour
+        </a>
+        <a *ngIf="blog" [routerLink]="['/admin/blogs/edit', blog.postId]" class="btn btn-warning">
+          <i class="fas fa-edit"></i> Modifier
+        </a>
+        <button *ngIf="blog" (click)="deleteBlog(blog.postId)" class="btn btn-danger">
+          <i class="fas fa-trash"></i> Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div class="row" *ngIf="!loading && !blog">
+    <div class="col">
+      <div class="alert alert-warning">
+        Article non trouvé.
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="blog">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header">
+          <h3>{{ blog.title }}</h3>
+          <small>Créé le {{ blog.createdAt | date:'dd/MM/yyyy HH:mm' }}</small>
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{ blog.content }}</p>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <span class="badge bg-primary">ID: {{ blog.postId }}</span>
+              <span class="badge bg-secondary ms-2">Utilisateur: {{ blog.userId }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
